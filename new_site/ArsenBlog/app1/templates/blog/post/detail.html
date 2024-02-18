@@ -1,0 +1,64 @@
+{% extends "blog/base.html" %}
+
+{% block title %}Blog{% endblock %}
+{% block content %}
+
+    {% for p in points %}
+        <h1>{{ p.header }}</h1>
+        <img src="{{ p.post_img.url }}" alt="img">
+        <p>{{ p.post_point_text }}</p>
+        <p class="date">Data: {{ i.publish }}</p>
+        <p class="date">Author: {{ i.author }}</p>
+    {% endfor %}
+
+    {% for i in comments %}
+        <div class="card border-dark mb-3">
+            <div class="card header">
+                <h2>{{ i.name }}</h2>
+                <p><b>E-mail : <a href="mailto:{{ i.emeil }}">{{ i.emeil }}</a></b></p>
+                <p align="right"><b>{{ forloop.counter }}</b></p>
+            </div>
+            <div class="card-body text-dark">
+                <p>{{ i.text }}</p>
+            </div>
+        </div>
+    {% endfor%}
+
+    <div class="m-5">
+
+        {% if new_comment %}
+            <h4 style="color: green;">Ваш комментарий добавлен</h4>
+        {% endif %}
+        <h2>Добавить комментарий</h2>
+        <form action="." method="post">
+        <div class="form-group">
+            <label for="nameInput">Имя</label>
+            {{ comment_form.name }}
+        </div>
+        <div class="form-group">
+            <label for="exampleInputEmail1">Ваш Email </label>
+            {{ comment_form.emeil }}
+        </div>
+        <div class="form-group">
+            <label for="comment">Комментарий</label>
+            {{ comment_form.text }}
+        </div>
+        <button type="submit" class="btn btn-primary">Добавить комментарий</button>
+        {% csrf_token %}
+        </form>
+
+    </div>
+    <h2>Схожі пости</h2>
+    <div>
+        {% for s in sposts %}
+            <a href="{{ s.get_absolute_url }}" >{{ s.title }}</a>;
+        {% empty %}
+            <p>Немає</p>
+        {% endfor %}
+    </div>
+
+{% endblock %}
+
+{% block sitebar %}
+
+{% endblock %}

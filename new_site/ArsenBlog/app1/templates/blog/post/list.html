@@ -1,0 +1,42 @@
+{% extends "blog/base.html" %}
+{% load tags %}
+{% block title %}Blog{% endblock %}
+
+{% block content %}
+
+
+    {% include "includes/1.html" only with title='Games' %}
+    {% if tag %}
+    {% endif%}
+    <!-- Привет -->
+    {% for i in list %}
+        <div class="card" style="width: 18rem;">
+          <a href="{{ i.get_absolute_url }}"><img src="{{ i.img.url }}" class="card-img-top" alt="img"></a>
+          <div class="card-body">
+            <h5 class="card-title">{{ i.title }}</h5>
+            <p class="card-text">{{ i.short_des }}</p>
+            <a href="{{ i.get_absolute_url }}" class="btn btn-primary">Read</a>
+          </div>
+          <div class="card-footer">
+            <p class="date">Publish: {{ i.publish }}</p>
+              {% if i.tag.all %}
+                <!-- <p class="date">Tags: {{ i.tag.all|join:" ," }}</p> -->
+                <p class="date">Tags:
+                    {% for t in i.tag.all %}
+                        <a class="date" href="{% url 'blog:tag' t.slug %}">{{t.name}}</a>
+                    {% endfor %}
+                </p>
+              {% endif %}
+            <p class="date">Author: {{ i.author }}</p>
+          </div>
+        </div>
+        {{ i.body| truncatewords:30 |linebreaks}}
+    {% endfor %}
+
+    {% include "includes/paginations.html"  with page=list %}
+
+{% endblock %}
+
+{% block sitebar %}
+
+{% endblock %}
