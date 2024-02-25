@@ -4,22 +4,42 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from django.template.loader import render_to_string
 from django.db.models import Count
-from .forms import CommentForm
-
+from .forms import CommentForm, LoginForm
+from django.http import HttpResponse
 # Create your views here.
 from .models import Post, PostPoint, Comment
 from django.views.generic import ListView
-
+from django.contrib.auth import authenticate, login
 from taggit.models import Tag
 
+def user_login(r):
+    if r.method=="POST":
+        form=LoginForm(r.POST)
+        if form.is_valid():
+            cd=form.cleaned_data
+            user=authenticate(r, username=cd["username"], password=cd["password"])
+            if user is not None:
+                if user.is_active:
+                    login(r, user)
+                    return HttpResponse("<h3>Ви успішно авторизувалися</h3>")
+                else:
+                    return HttpResponse("<h3>Ваш акаунт не активний</h3>")
+            else:
+                return HttpResponse("<h3>Не знайдено акаунт</h3>")
+    else:
+        form=LoginForm
+        return render(r, 'blog/account/login.html', {"form":form})
 
-class PostList(ListView):
-    queryset = Post.public.all()
-    context_object_name = "list"
-    paginate_by = 3
-    template_name = "blog/post/list.html"
 
-    #extra_context = {"post": 11}
+
+
+# class PostList(ListView):
+#     queryset = Post.public.all()
+#     context_object_name = "list"
+#     paginate_by = 3
+#     template_name = "blog/post/list.html"
+#
+#     #extra_context = {"post": 11}
 
 
 def post_list(r, tag_slug=None):
