@@ -11,24 +11,12 @@ from .models import Post, PostPoint, Comment
 from django.views.generic import ListView
 from django.contrib.auth import authenticate, login
 from taggit.models import Tag
+from django.contrib.auth.decorators import login_required
 
-def user_login(r):
-    if r.method=="POST":
-        form=LoginForm(r.POST)
-        if form.is_valid():
-            cd=form.cleaned_data
-            user=authenticate(r, username=cd["username"], password=cd["password"])
-            if user is not None:
-                if user.is_active:
-                    login(r, user)
-                    return HttpResponse("<h3>Ви успішно авторизувалися</h3>")
-                else:
-                    return HttpResponse("<h3>Ваш акаунт не активний</h3>")
-            else:
-                return HttpResponse("<h3>Не знайдено акаунт</h3>")
-    else:
-        form=LoginForm
-        return render(r, 'blog/account/login.html', {"form":form})
+@login_required
+def profile(r):
+    return render(r, 'blog/account/profile.html')
+
 
 
 
@@ -41,7 +29,7 @@ def user_login(r):
 #
 #     #extra_context = {"post": 11}
 
-
+@login_required
 def post_list(r, tag_slug=None):
 
     #posts=Post.objects.all()
@@ -60,7 +48,7 @@ def post_list(r, tag_slug=None):
     except EmptyPage:
         posts=p.page(p.num_pages)
 
-    return render(r, 'blog/post/list.html', {"list": posts, "tag": tag})
+    return render(r, 'blog/post/list.html', {"list": posts, "tag": tag, "range": range(1, p.num_pages+1)})
 
 def post_detail(r, year, month, day, post):
 

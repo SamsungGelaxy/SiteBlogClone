@@ -33,7 +33,7 @@
         {{ i.body| truncatewords:30 |linebreaks}}
     {% endfor %}
 
-    {% include "includes/paginations.html"  with page=list %}
+    {% include "includes/paginations.html"  with page=list range=range %}
 
 {% endblock %}
 

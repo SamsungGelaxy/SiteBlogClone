@@ -34,10 +34,15 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["127.0.0.1"]
 
+LOGIN_REDIRECT_URL="blog:post_list"
+LOGIN_URL="blog:login"
+LOGOUT_URL="blog:logout"
+
 
 # Application definition
 
 INSTALLED_APPS = [
+    'bootstrapform',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
