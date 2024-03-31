@@ -1,10 +1,11 @@
 from django.http import HttpResponse, Http404, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.template.defaultfilters import add
 
 from django.template.loader import render_to_string
 from django.db.models import Count
-from .forms import CommentForm, LoginForm
+from .forms import CommentForm, LoginForm, PostForm
 from django.http import HttpResponse
 # Create your views here.
 from .models import Post, PostPoint, Comment
@@ -14,10 +15,27 @@ from taggit.models import Tag
 from django.contrib.auth.decorators import login_required
 
 @login_required
+def add_post(request):
+    user=request.user
+    if request.method=='POST':
+        form=PostForm(request.POST,request.FILES)
+        if form.is_valid():
+            post=form.save(commit=False)
+            post.author=user
+            print(post)
+            post.save()
+    else:
+        form=PostForm()
+
+    return render(request, 'blog/account/post_add.html',{'form':form})
+
+@login_required
 def profile(r):
-    return render(r, 'blog/account/profile.html')
-
-
+    user=r.user
+    posts_public=Post.public.filter(author=user)
+    posts_draft=Post.objects.filter(author=user, status="draft")
+    print(posts_public)
+    return render(r, 'blog/account/profile.html', {"posts_pub":posts_public, "posts_draft": posts_draft})
 
 
 
@@ -46,6 +64,7 @@ def post_list(r, tag_slug=None):
 
         posts=p.page(1)
     except EmptyPage:
+
         posts=p.page(p.num_pages)
 
     return render(r, 'blog/post/list.html', {"list": posts, "tag": tag, "range": range(1, p.num_pages+1)})

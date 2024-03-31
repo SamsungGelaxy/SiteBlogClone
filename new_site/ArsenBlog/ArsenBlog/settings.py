@@ -35,8 +35,9 @@ DEBUG = True
 ALLOWED_HOSTS = ["127.0.0.1"]
 
 LOGIN_REDIRECT_URL="blog:post_list"
+LOGOUT_REDIRECT_URL="/blog/login/"
 LOGIN_URL="blog:login"
-LOGOUT_URL="blog:logout"
+
 
 
 # Application definition

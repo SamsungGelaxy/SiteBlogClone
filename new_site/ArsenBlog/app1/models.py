@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
 from taggit.managers import TaggableManager
-
+from slugify import slugify
 # Create your models here.
 class PublicManager(models.Manager):
     def get_queryset(self):
@@ -49,6 +49,9 @@ class Post(models.Model):
     def get_absolute_url(self):
 
         return reverse("app1:post_detail", args=(self.publish.year, self.publish.month, self.publish.day, self.slug,))
+    def save(self, *args, **kwargs):
+        self.slug=slugify(self.title)
+        return super(Post, self).save(args, kwargs)
 
 def save_img(instance, filename):
     post_id=instance.post.id
