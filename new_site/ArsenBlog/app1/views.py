@@ -1,5 +1,5 @@
 from django.http import HttpResponse, Http404, HttpResponseNotFound
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.defaultfilters import add
 
@@ -15,6 +15,29 @@ from taggit.models import Tag
 from django.contrib.auth.decorators import login_required
 
 @login_required
+def del_post(request, post_id):
+    try:
+        post = get_object_or_404(Post, id=post_id)
+        post.delete()
+        return redirect("blog:profile")
+    except Post.DoesNotExist:
+        return redirect("blog:profile")
+
+
+@login_required
+def edit_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    post_edit_form = PostForm(instance=post)
+    if request.method == 'POST':
+        post_edit_form = PostForm(request.POST,instance=post)
+        if post_edit_form.is_valid():
+            post_edit_form.save()
+    return render(request,
+                  'blog/account/post_edit.html',
+                  {'form': post_edit_form,
+                   'post': post})
+
+@login_required
 def add_post(request):
     user=request.user
     if request.method=='POST':
@@ -24,6 +47,7 @@ def add_post(request):
             post.author=user
             print(post)
             post.save()
+            for tag in form.cleaned_data["tag"]: post.tag.add(tag)
     else:
         form=PostForm()
 
