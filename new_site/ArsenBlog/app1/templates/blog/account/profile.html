@@ -35,7 +35,7 @@
                                 </p>
 
                                 <a class="btn btn-primary m-2"
-                                   href="#">
+                                   href="{% url 'blog:post_point_list' post.id %}">
                                     Етапи
                                 </a>
                                 <a class="btn btn-primary m-2"
@@ -78,7 +78,7 @@
                                     {% endfor %}
                                 </p>
 
-                                <a class="btn btn-primary m-2" href="#">
+                                <a class="btn btn-primary m-2" href="{% url 'blog:post_point_list' post.id %}">
                                     Етапи
                                 </a>
                                 <a class="btn btn-primary m-2"

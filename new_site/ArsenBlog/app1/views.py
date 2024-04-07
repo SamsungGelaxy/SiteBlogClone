@@ -5,7 +5,7 @@ from django.template.defaultfilters import add
 
 from django.template.loader import render_to_string
 from django.db.models import Count
-from .forms import CommentForm, LoginForm, PostForm
+from .forms import CommentForm, LoginForm, PostForm, PostPointForm
 from django.http import HttpResponse
 # Create your views here.
 from .models import Post, PostPoint, Comment
@@ -13,6 +13,27 @@ from django.views.generic import ListView
 from django.contrib.auth import authenticate, login
 from taggit.models import Tag
 from django.contrib.auth.decorators import login_required
+
+@login_required
+def post_point_add(r, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    form = PostPointForm()
+
+    if r.method == 'POST':
+        form = PostPointForm(r.POST,
+                             r.FILES)
+        if form.is_valid():
+            post_point = form.save(commit=False)
+            post_point.post = post
+            post_point.save()
+
+    return render(r, 'blog/account/post_point_add.html', {'form': form, 'post': post})
+
+@login_required
+def post_point_list(r, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    pp_list=PostPoint.objects.filter(post__id=post_id)
+    return render(r, 'blog/account/post_point.html', {'post_points': pp_list, "post":post})
 
 @login_required
 def del_post(request, post_id):

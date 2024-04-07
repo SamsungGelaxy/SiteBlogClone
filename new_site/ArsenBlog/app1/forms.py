@@ -1,9 +1,14 @@
 from django import forms
-from .models import Comment, Post
+from .models import Comment, Post, PostPoint
 class PostForm(forms.ModelForm):
     class Meta:
         model=Post
         fields=("title", "tag", "short_des", "img")
+
+class PostPointForm(forms.ModelForm):
+    class Meta:
+        model=PostPoint
+        fields=("header", "post_point_text", "post_img")
 
 
 class CommentForm(forms.ModelForm):

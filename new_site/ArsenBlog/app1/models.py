@@ -64,7 +64,7 @@ class PostPoint(models.Model):
     post_img = models.ImageField(
         verbose_name="picture_point",
         upload_to=save_img,
-        blank=False,
+        blank=True,
     )
 
     def __str__(self):

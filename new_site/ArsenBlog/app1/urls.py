@@ -19,4 +19,6 @@ urlpatterns = [
     path('add_post/', v.add_post, name="add_post"),
     path('edit_post/<int:post_id>/', v.edit_post, name="edit_post"),
     path('del_post/<int:post_id>/', v.del_post, name="del_post"),
+    path('post_point_list/<int:post_id>/', v.post_point_list, name="post_point_list"),
+    path('post_point_add/<int:post_id>/', v.post_point_add, name="post_point_add"),
 ]
