@@ -5,7 +5,7 @@
 {% block account_content %}
     <div class="title-post-point-page">
         <h2 class="text-center mb-4">
-           Етапи до поста <a href="{% if post.status=='Published' %} {{post.get_absolute_url}} {%endif%}">{{ post.title }}</a>
+           Етапи до поста <a href="{% if post.status == 'Published' %} {{post.get_absolute_url}} {%endif%}">{{ post.title }}</a>
         </h2>
         <a class="btn btn-primary m-2 add-point" href="{% url 'blog:post_point_add' post.id %}">
             Додати етап
@@ -40,8 +40,8 @@
                         </div>
                         <div class="card-footer">
 
-                            <a class="btn btn-primary m-2" href="">Редактировать</a>
-                            <a class="btn btn-danger m-2" href="">Удалить</a>
+                            <a class="btn btn-primary m-2" href="{% url 'blog:post_point_edit' pp.id %}">Редактировать</a>
+                            <a class="btn btn-danger m-2" href="{% url 'blog:post_point_del' pp.id %}">Удалить</a>
                         </div>
                     </div>
                 </div>

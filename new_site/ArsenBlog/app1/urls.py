@@ -21,4 +21,6 @@ urlpatterns = [
     path('del_post/<int:post_id>/', v.del_post, name="del_post"),
     path('post_point_list/<int:post_id>/', v.post_point_list, name="post_point_list"),
     path('post_point_add/<int:post_id>/', v.post_point_add, name="post_point_add"),
+    path('post_point_del/<int:id>/', v.del_post_point, name="post_point_del"),
+    path('post_point_edit/<int:id>/', v.edit_post_point, name="post_point_edit"),
 ]

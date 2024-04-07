@@ -15,6 +15,29 @@ from taggit.models import Tag
 from django.contrib.auth.decorators import login_required
 
 @login_required
+def edit_post_point(request, id):
+    p = get_object_or_404(PostPoint, id=id)
+
+    edit_form = PostPointForm(instance=p)
+    if request.method == 'POST':
+        edit_form = PostForm(request.POST, instance=p)
+        if edit_form.is_valid():
+            edit_form.save()
+    return render(request,
+                  'blog/account/post_point_edit.html',
+                  {'form': edit_form,
+                   'p': p,})
+
+@login_required
+def del_post_point(request, id):
+    try:
+        pp = PostPoint.objects.get(id=id)
+        pp.delete()
+        return redirect("blog:post_point_list", pp.post.id)
+    except PostPoint.DoesNotExist:
+        return redirect("blog:profile")
+
+@login_required
 def post_point_add(r, post_id):
     post = get_object_or_404(Post, id=post_id)
     form = PostPointForm()
