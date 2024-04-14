@@ -10,5 +10,6 @@
             {% csrf_token %}
             <input type="hidden" name="next" value="{{next}}">            <button class="btn btn-lg btn-primary mt-2" type="submit" >
                 Увійти            </button>
+    <a href="{% url 'blog:sign_up' %}" class="btn btn-lg btn-warning mt-2">Зареєструватися</a>
         </form>    </div>
 {% endblock content %}

@@ -1,16 +1,9 @@
-
-
-
 from django.urls import path, register_converter
 from . import views as v
 from django.contrib.auth import views
 app_name="blog"
-
-
-
 urlpatterns = [
     path('tag/<slug:tag_slug>/', v.post_list, name="tag"),
-
     path('', v.post_list, name="post_list"),
     path('<int:year>/<int:month>/<int:day>/<slug:post>/', v.post_detail, name="post_detail"),
     path('login/', views.LoginView.as_view(), name="login"),
@@ -23,4 +16,5 @@ urlpatterns = [
     path('post_point_add/<int:post_id>/', v.post_point_add, name="post_point_add"),
     path('post_point_del/<int:id>/', v.del_post_point, name="post_point_del"),
     path('post_point_edit/<int:id>/', v.edit_post_point, name="post_point_edit"),
+    path('sign_up/', v.sign_up, name="sign_up"),
 ]

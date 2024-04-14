@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.http import HttpResponse, Http404, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -5,7 +6,7 @@ from django.template.defaultfilters import add
 
 from django.template.loader import render_to_string
 from django.db.models import Count
-from .forms import CommentForm, LoginForm, PostForm, PostPointForm
+from .forms import CommentForm, LoginForm, PostForm, PostPointForm, RegistrationForm, InfoForm
 from django.http import HttpResponse
 # Create your views here.
 from .models import Post, PostPoint, Comment
@@ -13,6 +14,27 @@ from django.views.generic import ListView
 from django.contrib.auth import authenticate, login
 from taggit.models import Tag
 from django.contrib.auth.decorators import login_required
+def edit(r):
+    form=InfoForm()
+    if r.method=="POST":
+        form=InfoForm(r.POST)
+        if form.is_valid():
+            info=form.cleaned_data["info"]
+
+
+            return render(r, "registration/sign_up.html", {"user_form":form})
+
+def sign_up(r):
+    form=RegistrationForm()
+    if r.method=="POST":
+        form=RegistrationForm(r.POST)
+        if form.is_valid():
+            nuser=User.objects.create_user(**form.cleaned_data)
+            nuser.save()
+            login(r, authenticate(username=form.cleaned_data["username"], password=form.cleaned_data["password"]))
+
+            return redirect("blog:post_list")
+    return render(r, "registration/sign_up.html", {"user_form":form})
 
 @login_required
 def edit_post_point(request, id):
@@ -20,7 +42,7 @@ def edit_post_point(request, id):
 
     edit_form = PostPointForm(instance=p)
     if request.method == 'POST':
-        edit_form = PostForm(request.POST, instance=p)
+        edit_form = PostPointForm(request.POST, instance=p)
         if edit_form.is_valid():
             edit_form.save()
     return render(request,
