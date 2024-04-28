@@ -11,6 +11,7 @@ class PublicManager(models.Manager):
 
 class Post(models.Model):
     STATUS_CHOISES=(("draft", "Draft"), ("published", "Published"),)
+    like=models.ManyToManyField(User, related_name="like_p", blank=True)
 
 
     title=models.CharField(max_length=30, verbose_name="Title")

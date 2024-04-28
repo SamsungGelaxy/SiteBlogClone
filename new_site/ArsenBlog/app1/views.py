@@ -13,6 +13,13 @@ from django.views.generic import ListView
 from django.contrib.auth import authenticate, login
 from taggit.models import Tag
 from django.contrib.auth.decorators import login_required
+
+@login_required
+def liked(r, post_id):
+    post=get_object_or_404(Post, id=post_id)
+    post.like.add(r.user)
+    return redirect("blog:post_list")
+
 @login_required
 def editProfile(r):
     user_edit_form=UserEditForm(instance=r.user)
