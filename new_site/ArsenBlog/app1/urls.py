@@ -17,4 +17,5 @@ urlpatterns = [
     path('post_point_del/<int:id>/', v.del_post_point, name="post_point_del"),
     path('post_point_edit/<int:id>/', v.edit_post_point, name="post_point_edit"),
     path('sign_up/', v.sign_up, name="sign_up"),
+    path('edit_profile/', v.editProfile, name="edit_profile"),
 ]

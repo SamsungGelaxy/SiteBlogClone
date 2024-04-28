@@ -2,6 +2,16 @@
 {% load tags %}
 {% block title %}Blog{% endblock %}
 
+
+{% block formS %}
+    <form action="." class="form-inline my-2 my-lg-0 search-form" >
+        {{form}}
+        {% csrf_token %}
+        <button type="submit" class="btn btn-dark my-2 my-sm-0">Search</button>
+    </form>
+{% endblock %}
+
+
 {% block content %}
 
 

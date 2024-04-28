@@ -1,6 +1,20 @@
 from django import forms
 from .models import Comment, Post, PostPoint, User
 
+class SearchForm(forms.Form):
+    query=forms.CharField(widget=forms.TextInput(attrs={"class":"form-control mr-sm-2", "type":"search", "placeholder":"Введіть пошуковий запит", "aria-label":"Search"}), max_length=100)
+
+class UserEditForm(forms.ModelForm):
+    class Meta:
+        model=User
+        fields=("first_name", "last_name", "username", "email")
+
+
+class UserEditForm(forms.ModelForm):
+    class Meta:
+        model=User
+        fields=("first_name", "last_name", "username", "email")
+
 class RegistrationForm(forms.ModelForm):
     password=forms.CharField(max_length=8, widget=forms.PasswordInput())
     class Meta:

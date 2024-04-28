@@ -3,10 +3,9 @@ from django.http import HttpResponse, Http404, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.template.defaultfilters import add
-
 from django.template.loader import render_to_string
 from django.db.models import Count
-from .forms import CommentForm, LoginForm, PostForm, PostPointForm, RegistrationForm, InfoForm
+from .forms import CommentForm, LoginForm, PostForm, PostPointForm, RegistrationForm, UserEditForm, SearchForm
 from django.http import HttpResponse
 # Create your views here.
 from .models import Post, PostPoint, Comment
@@ -14,16 +13,15 @@ from django.views.generic import ListView
 from django.contrib.auth import authenticate, login
 from taggit.models import Tag
 from django.contrib.auth.decorators import login_required
-def edit(r):
-    form=InfoForm()
+@login_required
+def editProfile(r):
+    user_edit_form=UserEditForm(instance=r.user)
     if r.method=="POST":
-        form=InfoForm(r.POST)
-        if form.is_valid():
-            info=form.cleaned_data["info"]
-
-
-            return render(r, "registration/sign_up.html", {"user_form":form})
-
+        user_edit_form = UserEditForm(r.POST, instance=r.user)
+        if user_edit_form.is_valid():
+            user_edit_form.save()
+            return redirect("blog:profile")
+    return render(r, "blog/account/edit_profile.html", {"form": user_edit_form})
 def sign_up(r):
     form=RegistrationForm()
     if r.method=="POST":
@@ -142,6 +140,22 @@ def post_list(r, tag_slug=None):
 
     #posts=Post.objects.all()
     public_posts=Post.public.all()
+
+    form=SearchForm()
+    query=None
+    if "query" in r.GET:
+        form=SearchForm(r.GET)
+        if form.is_valid():
+            query=form.cleaned_data["query"]
+            try:
+                public_posts=Post.public.filter(title__contains=query)
+            except:
+                public_posts=[]
+        else:
+            public_posts = Post.public.all()
+
+
+
     tag=None
     if tag_slug:
         tag=get_object_or_404(Tag, slug=tag_slug)
@@ -157,7 +171,7 @@ def post_list(r, tag_slug=None):
 
         posts=p.page(p.num_pages)
 
-    return render(r, 'blog/post/list.html', {"list": posts, "tag": tag, "range": range(1, p.num_pages+1)})
+    return render(r, 'blog/post/list.html', {"list": posts, "tag": tag, "range": range(1, p.num_pages+1), "form": form})
 
 def post_detail(r, year, month, day, post):
 
