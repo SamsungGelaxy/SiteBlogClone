@@ -1,5 +1,5 @@
 #header {
-    padding:10px 100px;
+    padding:10px 60px;
     font-size:14px;
     color:#fff;
     border-bottom:4px solid #1cdf78;
@@ -144,4 +144,24 @@ a.date {
 
 .current {
     font-weight: bolt;
+}
+
+.logo-img{
+    height: 60px;
+}
+
+.account-content{
+    margin: 0 auto;
+}
+
+.add-point{
+    display: block;
+    margin: 0 auto;
+}
+
+.mb_my{
+    margin-bottom: 100px;
+}
+.search-form label{
+   opacity: 0;
 }
