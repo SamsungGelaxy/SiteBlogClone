@@ -1,64 +1,61 @@
-{% extends "blog/base.html" %}
-
-{% block title %}Blog{% endblock %}
+{% extends 'blog/base.html' %}{% load static %}
+{% load  bootstrap %}{% block title %}
+    {{ post.title }}{% endblock %}
 {% block content %}
+    <div class="container my-3">
+        <div class="card-deck">            <div class="card">
+                <div class="row">                <img src="{{ MEDIA_URL }}{{ post.img.url }}" class="card-img-top detail-image-size" alt="...">
+                    <div class="favourite">                    {% if post in request.user.like_p.all%}
+               <a href="#">                       <img src="{% static 'IMG/ico1.png' %}" alt="">
+                       </a>                   {% else %}
+                       <a href="{% url 'blog:liked' post.id %}">                           <img src="{% static 'IMG/ico2.png' %}" alt="">
+                       </a>                   {% endif %}
+                    </div>                </div>
+                <div class="card-body">                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text">{{ post.short_des }}</p>                </div>
+                {% for post_point in points %}                    <div class="card-body">
+                        <h5 class="card-title">{{ post_point.header}}</h5>                        {% if post_point.post_image %}
+                            <img src="{{ MEDIA_URL }}{{ post_point.post_img.url }}" class="card-img-top" alt="..."                            style="width: 500px">
+                        {% endif %}                        {% if post_point.header == "Ингредиенты" %}
+                            <pre class="card-text">{{ post_point.post_point_text }}</pre>                        {% else %}
+                            <p class="card-text">{{ post_point.post_point_text }}</p>                        {% endif %}
+                    </div>
+                {% endfor %}                <div class="card-footer">
+                    <small class="text-muted">Опубликовано {{ post.publish }}. Автор {{ post.author }}</small>                </div>
 
-    {% for p in points %}
-        <h1>{{ p.header }}</h1>
-        <img src="{{ p.post_img.url }}" alt="img">
-        <p>{{ p.post_point_text }}</p>
-        <p class="date">Data: {{ i.publish }}</p>
-        <p class="date">Author: {{ i.author }}</p>
-    {% endfor %}
-
-    {% for i in comments %}
-        <div class="card border-dark mb-3">
-            <div class="card header">
-                <h2>{{ i.name }}</h2>
-                <p><b>E-mail : <a href="mailto:{{ i.emeil }}">{{ i.emeil }}</a></b></p>
-                <p align="right"><b>{{ forloop.counter }}</b></p>
+<div class="m-5">    {% with comments.count as total_comments  %}
+        <h2> Коментарів : {{ total_comments }}</h2>    {% endwith %}
+    {% for comment in comments %}
+            <div class="card border-dark mb-3" >
+              <div class="card-header"><b>{{ forloop.counter }}. </b> {{ comment.name }},  E-mail {{ comment.email }}</div>               <div class="card-body  text-dark">
+                <p class="card-text">{{ comment.body }}</p>              </div>
+            </div>    {% endfor %}
+</div>
+<div class="m-5">                    {% if new_comment %}
+                        <h2>Ваш комментарий добавлен</h2>
+                    {% else %}                        <h2>Добавить комментарий</h2>
+                        <form action="." method="post">                        <div class="form-group">
+                            <label for="nameInput">Имя</label>                            {{ comment_form.name }}
+                        </div>                        <div class="form-group">
+                            <label for="exampleInputEmail1">Ваш Email </label>                            {{ comment_form.email }}
+                        </div>                        <div class="form-group">
+                            <label for="comment">Коментар</label>                            {{ comment_form.body }}
+                        </div>                            <button type="submit" class="btn btn-outline-info">Додати</button>
+                        {% csrf_token %}                        </form>
+                    {% endif %}                </div>
+<div class="m-5" >
+    {% if similar_posts %}    <h2 class="text-center mb-3">Схожі статті</h2>
+    <div class="row row-cols-1 row-cols-md-3">        {% for post in similar_posts %}
+              <div class="col mb-4">                <div class="card h-100">
+                  <img src="{{ MEDIA_URL }}{{ post.image.url }}" class="card-img-top detail-image-size"
+alt="...">                  <div class="card-body">
+                    <h5 class="card-title">                        <a href="{{post.get_absolute_url}}">
+                            {{ post.title|truncatechars:70 }}                        </a>
+                    </h5>                  </div>
+                </div>              </div>
+        {% empty %}        {% endfor %}
+    </div>{% endif %}
+</div>
             </div>
-            <div class="card-body text-dark">
-                <p>{{ i.text }}</p>
-            </div>
-        </div>
-    {% endfor%}
-
-    <div class="m-5">
-
-        {% if new_comment %}
-            <h4 style="color: green;">Ваш комментарий добавлен</h4>
-        {% endif %}
-        <h2>Добавить комментарий</h2>
-        <form action="." method="post">
-        <div class="form-group">
-            <label for="nameInput">Имя</label>
-            {{ comment_form.name }}
-        </div>
-        <div class="form-group">
-            <label for="exampleInputEmail1">Ваш Email </label>
-            {{ comment_form.emeil }}
-        </div>
-        <div class="form-group">
-            <label for="comment">Комментарий</label>
-            {{ comment_form.text }}
-        </div>
-        <button type="submit" class="btn btn-primary">Добавить комментарий</button>
-        {% csrf_token %}
-        </form>
-
-    </div>
-    <h2>Схожі пости</h2>
-    <div>
-        {% for s in sposts %}
-            <a href="{{ s.get_absolute_url }}" >{{ s.title }}</a>;
-        {% empty %}
-            <p>Немає</p>
-        {% endfor %}
-    </div>
-
-{% endblock %}
-
-{% block sitebar %}
-
+        </div>    </div>
 {% endblock %}

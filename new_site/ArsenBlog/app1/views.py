@@ -15,10 +15,14 @@ from taggit.models import Tag
 from django.contrib.auth.decorators import login_required
 
 @login_required
-def liked(r, post_id):
-    post=get_object_or_404(Post, id=post_id)
-    post.like.add(r.user)
-    return redirect("blog:post_list")
+def liked(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    post.like.add(request.user)
+    return redirect('blog:post_detail', year=post.publish.year,
+                    month=post.publish.month,
+                    day=post.publish.day,
+                    post=post.slug,
+                    post_id=post.id)
 
 @login_required
 def editProfile(r):
@@ -180,9 +184,9 @@ def post_list(r, tag_slug=None):
 
     return render(r, 'blog/post/list.html', {"list": posts, "tag": tag, "range": range(1, p.num_pages+1), "form": form})
 
-def post_detail(r, year, month, day, post):
+def post_detail(r, year, month, day, post, post_id):
 
-    p_ob=get_object_or_404(Post, slug=post, status="published", publish__month=month, publish__day=day, publish__year=year)
+    p_ob=get_object_or_404(Post, slug=post, status="published", publish__month=month, publish__day=day, publish__year=year, id=post_id)
     points=PostPoint.objects.filter(post=p_ob)
     comments=p_ob.comments.filter(active=1)
     if len(points)<1:

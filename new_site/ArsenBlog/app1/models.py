@@ -49,14 +49,16 @@ class Post(models.Model):
 
     def get_absolute_url(self):
 
-        return reverse("app1:post_detail", args=(self.publish.year, self.publish.month, self.publish.day, self.slug,))
+        return reverse("app1:post_detail", args=(self.publish.year, self.publish.month, self.publish.day, self.slug, self.pk,))
     def save(self, *args, **kwargs):
         self.slug=slugify(self.title)
         return super(Post, self).save(args, kwargs)
 
 def save_img(instance, filename):
     post_id=instance.post.id
-    return "pictures/{}/{}".format(post_id, filename)
+    if filename:
+        return "pictures/{}/{}".format(post_id, filename)
+
 
 class PostPoint(models.Model):
     header=models.CharField(max_length=30, verbose_name="Header", default="Title")
