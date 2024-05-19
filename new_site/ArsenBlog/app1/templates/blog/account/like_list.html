@@ -1,0 +1,45 @@
+{% extends "blog/base_ac.html" %}
+{% load tags %}
+{% block title %}Blog{% endblock %}
+
+
+
+{% block account_content %}
+    {% include "includes/1.html" only with title='Улюбленні пости' %}
+    {% if posts.count > 0 %}
+        {% for i in posts %}
+            <div class="card" style="width: 18rem;">
+              <a href="{{ i.get_absolute_url }}"><img src="{{ i.img.url }}" class="card-img-top" alt="img"></a>
+              <div class="card-body">
+                <h5 class="card-title">{{ i.title }}</h5>
+                <p class="card-text">{{ i.short_des }}</p>
+                <a href="{{ i.get_absolute_url }}" class="btn btn-primary">Read</a>
+                <a href="{% url 'blog:liked' i.id %}" class="btn btn-primary">Delete from favorite</a>
+              </div>
+              <div class="card-footer">
+                <p class="date">Publish: {{ i.publish }}</p>
+                  {% if i.tag.all %}
+                    <!-- <p class="date">Tags: {{ i.tag.all|join:" ," }}</p> -->
+                    <p class="date">Tags:
+                        {% for t in i.tag.all %}
+                            <a class="date" href="{% url 'blog:tag' t.slug %}">{{t.name}}</a>
+                        {% endfor %}
+                    </p>
+                  {% endif %}
+                <p class="date">Author: {{ i.author }}</p>
+              </div>
+            </div>
+            {{ i.body| truncatewords:30 |linebreaks}}
+        {% endfor %}
+    {% else %}
+        <p>Немає</p>
+    {% endif %}
+
+
+    {% include "includes/paginations.html"  with page=list range=range %}
+
+{% endblock %}
+
+{% block sitebar %}
+
+{% endblock %}

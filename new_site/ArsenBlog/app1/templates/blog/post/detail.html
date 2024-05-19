@@ -6,7 +6,7 @@
         <div class="card-deck">            <div class="card">
                 <div class="row">                <img src="{{ MEDIA_URL }}{{ post.img.url }}" class="card-img-top detail-image-size" alt="...">
                     <div class="favourite">                    {% if post in request.user.like_p.all%}
-               <a href="#">                       <img src="{% static 'IMG/ico1.png' %}" alt="">
+               <a href="{% url 'blog:liked' post.id %}">                       <img src="{% static 'IMG/ico1.png' %}" alt="">
                        </a>                   {% else %}
                        <a href="{% url 'blog:liked' post.id %}">                           <img src="{% static 'IMG/ico2.png' %}" alt="">
                        </a>                   {% endif %}
@@ -14,7 +14,7 @@
                 <div class="card-body">                    <h5 class="card-title">{{ post.title }}</h5>
                     <p class="card-text">{{ post.short_des }}</p>                </div>
                 {% for post_point in points %}                    <div class="card-body">
-                        <h5 class="card-title">{{ post_point.header}}</h5>                        {% if post_point.post_image %}
+                        <h5 class="card-title">{{ post_point.header}}</h5>                        {% if post_point.post_img %}
                             <img src="{{ MEDIA_URL }}{{ post_point.post_img.url }}" class="card-img-top" alt="..."                            style="width: 500px">
                         {% endif %}                        {% if post_point.header == "Ингредиенты" %}
                             <pre class="card-text">{{ post_point.post_point_text }}</pre>                        {% else %}

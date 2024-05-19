@@ -57,12 +57,12 @@ class Post(models.Model):
 def save_img(instance, filename):
     post_id=instance.post.id
     if filename:
-        return "pictures/{}/{}".format(post_id, filename)
+        return "pictures/{}".format(filename)
 
 
 class PostPoint(models.Model):
     header=models.CharField(max_length=30, verbose_name="Header", default="Title")
-    post=models.ForeignKey(Post, on_delete=models.CASCADE, default=None)
+    post=models.ForeignKey(Post, on_delete=models.CASCADE, related_name="points")
     post_point_text=models.TextField(verbose_name="Post_point")
     post_img = models.ImageField(
         verbose_name="picture_point",

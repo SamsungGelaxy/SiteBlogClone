@@ -13,16 +13,22 @@ from django.views.generic import ListView
 from django.contrib.auth import authenticate, login
 from taggit.models import Tag
 from django.contrib.auth.decorators import login_required
+import os
+
+@login_required
+def like_list(r):
+    posts=r.user.like_p.all()
+    return render(r, "blog/account/like_list.html", {"posts": posts})
 
 @login_required
 def liked(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    post.like.add(request.user)
-    return redirect('blog:post_detail', year=post.publish.year,
-                    month=post.publish.month,
-                    day=post.publish.day,
-                    post=post.slug,
-                    post_id=post.id)
+    preref=request.META.get('HTTP_REFERER')
+    if not(request.user in post.like.all()):
+        post.like.add(request.user)
+    else:
+        post.like.remove(request.user)
+    return redirect(preref)
 
 @login_required
 def editProfile(r):
@@ -63,6 +69,7 @@ def edit_post_point(request, id):
 def del_post_point(request, id):
     try:
         pp = PostPoint.objects.get(id=id)
+        os.remove(pp.post_img.path)
         pp.delete()
         return redirect("blog:post_point_list", pp.post.id)
     except PostPoint.DoesNotExist:
@@ -93,6 +100,9 @@ def post_point_list(r, post_id):
 def del_post(request, post_id):
     try:
         post = get_object_or_404(Post, id=post_id)
+        os.remove(post.img.path)
+        for p in post.points.all():
+            os.remove(p.post_img.path)
         post.delete()
         return redirect("blog:profile")
     except Post.DoesNotExist:
@@ -120,7 +130,6 @@ def add_post(request):
         if form.is_valid():
             post=form.save(commit=False)
             post.author=user
-            print(post)
             post.save()
             for tag in form.cleaned_data["tag"]: post.tag.add(tag)
     else:

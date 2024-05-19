@@ -1,6 +1,10 @@
 from django.urls import path, register_converter
 from . import views as v
 from django.contrib.auth import views
+
+from .converters import url
+
+register_converter(url, "url")
 app_name="blog"
 urlpatterns = [
     path('tag/<slug:tag_slug>/', v.post_list, name="tag"),
@@ -19,4 +23,5 @@ urlpatterns = [
     path('sign_up/', v.sign_up, name="sign_up"),
     path('edit_profile/', v.editProfile, name="edit_profile"),
     path('like_add/<int:post_id>/', v.liked, name="liked"),
+    path('like_list/', v.like_list, name="like_list"),
 ]
