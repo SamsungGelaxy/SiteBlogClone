@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'app1.apps.App1Config',
     'django_extensions',
     'taggit',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

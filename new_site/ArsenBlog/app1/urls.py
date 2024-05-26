@@ -1,8 +1,17 @@
-from django.urls import path, register_converter
+from django.urls import path, register_converter, include
 from . import views as v
 from django.contrib.auth import views
 
 from .converters import url
+
+from rest_framework import routers
+
+from app1.api import views as apiviews
+
+router = routers.DefaultRouter()
+router.register(r'posts', apiviews.PostViewSet)
+router.register(r'post_point', apiviews.PostPointViewSet)
+
 
 register_converter(url, "url")
 app_name="blog"
@@ -24,4 +33,5 @@ urlpatterns = [
     path('edit_profile/', v.editProfile, name="edit_profile"),
     path('like_add/<int:post_id>/', v.liked, name="liked"),
     path('like_list/', v.like_list, name="like_list"),
+    path('api/', include(router.urls)),
 ]

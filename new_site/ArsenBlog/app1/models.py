@@ -22,7 +22,7 @@ class Post(models.Model):
 
     author=models.ForeignKey(User, on_delete=models.CASCADE, related_name="post", verbose_name="Author", default=None)
 
-    short_des=models.CharField(max_length=255, verbose_name="Description")
+    short_des=models.ChrField(max_length=255, verbose_name="Description")
     publish=models.DateTimeField(default=timezone.now, verbose_name="Publish")
     date_create=models.DateTimeField(auto_now_add=True, verbose_name="Create_date")
     date_update=models.DateTimeField(auto_now=True, verbose_name="Update_date")

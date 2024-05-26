@@ -17,8 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, register_converter
 
-from app1 import views as v
 
+
+from app1 import views as v
 
 
 
