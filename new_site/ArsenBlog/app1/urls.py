@@ -32,6 +32,7 @@ urlpatterns = [
     path('sign_up/', v.sign_up, name="sign_up"),
     path('edit_profile/', v.editProfile, name="edit_profile"),
     path('like_add/<int:post_id>/', v.liked, name="liked"),
+    path('disliked/<int:post_id>/', v.disliked, name="disliked"),
     path('like_list/', v.like_list, name="like_list"),
     path('api/', include(router.urls)),
 ]

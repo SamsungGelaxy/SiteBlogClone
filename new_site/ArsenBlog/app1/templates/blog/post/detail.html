@@ -3,20 +3,42 @@
     {{ post.title }}{% endblock %}
 {% block content %}
     <div class="container my-3">
-        <div class="card-deck">            <div class="card">
-                <div class="row">                <img src="{{ MEDIA_URL }}{{ post.img.url }}" class="card-img-top detail-image-size" alt="...">
-                    <div class="favourite">                    {% if post in request.user.like_p.all%}
-               <a href="{% url 'blog:liked' post.id %}">                       <img src="{% static 'IMG/ico1.png' %}" alt="">
-                       </a>                   {% else %}
-                       <a href="{% url 'blog:liked' post.id %}">                           <img src="{% static 'IMG/ico2.png' %}" alt="">
-                       </a>                   {% endif %}
-                    </div>                </div>
-                <div class="card-body">                    <h5 class="card-title">{{ post.title }}</h5>
-                    <p class="card-text">{{ post.short_des }}</p>                </div>
-                {% for post_point in points %}                    <div class="card-body">
+        <div class="card-deck">
+            <div class="card">
+                <div class="row">
+                    <img src="{{ MEDIA_URL }}{{ post.img.url }}" class="card-img-top detail-image-size" alt="...">
+                    <div class="favourite">
+                       {% if post in request.user.like_p.all%}
+                           <a href="{% url 'blog:liked' post.id %}">
+                               <img src="{% static 'IMG/ico1.png' %}" alt="">
+                           </a>
+                       {% else %}
+                           <a href="{% url 'blog:liked' post.id %}">
+                               <img src="{% static 'IMG/ico2.png' %}" alt="">
+                           </a>
+                       {% endif %}
+                    </div>
+                    <div class="dislike">
+                       {% if post in request.user.unlike.all%}
+                           <a href="{% url 'blog:disliked' post.id %}">
+                               <img src="{% static 'IMG/undislike.jpg' %}" alt="">
+                           </a>
+                       {% else %}
+                           <a href="{% url 'blog:disliked' post.id %}">
+                               <img src="{% static 'IMG/dislike.jpg' %}" alt="">
+                           </a>
+                       {% endif %}
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text">{{ post.short_des }}</p>
+                </div>
+                {% for post_point in points %}
+                <div class="card-body">
                         <h5 class="card-title">{{ post_point.header}}</h5>
                         {% if post_point.post_img %}
-                            <img src="{{ MEDIA_URL }}{{ post_point.post_img.url }}" class="card-img-top" alt="..."                            style="width: 500px">
+                            <img src="{{ MEDIA_URL }}{{ post_point.post_img.url }}" class="card-img-top" alt="..." >                           style="width: 500px">
                         {% elif post_point.video %}
                             <div class="video-container">
                                 <video id="videoPlayer" src="{{post_point.video.url}}"></video>

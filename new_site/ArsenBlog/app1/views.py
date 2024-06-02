@@ -16,6 +16,16 @@ from django.contrib.auth.decorators import login_required
 import os
 
 @login_required
+def disliked(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    preref=request.META.get('HTTP_REFERER')
+    if not(request.user in post.dislike.all()):
+        post.dislike.add(request.user)
+    else:
+        post.dislike.remove(request.user)
+    return redirect(preref)
+
+@login_required
 def like_list(r):
     posts=r.user.like_p.all()
     return render(r, "blog/account/like_list.html", {"posts": posts})
