@@ -14,11 +14,24 @@
                 <div class="card-body">                    <h5 class="card-title">{{ post.title }}</h5>
                     <p class="card-text">{{ post.short_des }}</p>                </div>
                 {% for post_point in points %}                    <div class="card-body">
-                        <h5 class="card-title">{{ post_point.header}}</h5>                        {% if post_point.post_img %}
+                        <h5 class="card-title">{{ post_point.header}}</h5>
+                        {% if post_point.post_img %}
                             <img src="{{ MEDIA_URL }}{{ post_point.post_img.url }}" class="card-img-top" alt="..."                            style="width: 500px">
-                        {% endif %}                        {% if post_point.header == "Ингредиенты" %}
-                            <pre class="card-text">{{ post_point.post_point_text }}</pre>                        {% else %}
-                            <p class="card-text">{{ post_point.post_point_text }}</p>                        {% endif %}
+                        {% elif post_point.video %}
+                            <div class="video-container">
+                                <video id="videoPlayer" src="{{post_point.video.url}}"></video>
+                                <div class="controls">
+                                    <button class="control-button" onclick="togglePlayPause()">▶️</button>
+                                    <button class="control-button_a" onclick="toggleMute()">🔈</button>
+                                    <button class="control-button" onclick="toggleFullScreen()">⛶</button>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if post_point.header == "Ингредиенты" %}
+                            <pre class="card-text">{{ post_point.post_point_text }}</pre>
+                        {% else %}
+                            <p class="card-text">{{ post_point.post_point_text }}</p>
+                        {% endif %}
                     </div>
                 {% endfor %}                <div class="card-footer">
                     <small class="text-muted">Опубликовано {{ post.publish }}. Автор {{ post.author }}</small>                </div>
